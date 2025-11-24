@@ -6,7 +6,7 @@ import traceback
 # ===================== CONFIGURATION API =====================
 # 🔒 Clé API intégrée directement dans le code (ne pas partager publiquement)
 API_KEY = "AIzaSyCi4hp7QaEnaksgmuHBMGqY_hEjwn8UVSk"
-API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent"
+API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 
 # ===================== FONCTION D'APPEL API =====================
 def generate_text_with_api(prompt):
@@ -164,3 +164,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
