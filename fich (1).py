@@ -6,10 +6,9 @@ import traceback
 # ===================== CONFIGURATION API =====================
 # 🔒 Clé API intégrée directement dans le code (ne pas partager publiquement)
 API_KEY = "AIzaSyCi4hp7QaEnaksgmuHBMGqY_hEjwn8UVSk"
-API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent"
 
 # ===================== FONCTION D'APPEL API =====================
-@st.cache_data(show_spinner=False, ttl=600) # Mise en cache des résultats pour 10 minutes (600s)
 def generate_text_with_api(prompt):
     """Envoie une requête à l'API Gemini et renvoie une réponse concise."""
     headers = {"Content-Type": "application/json"}
@@ -67,18 +66,6 @@ def check_syntax_and_errors(code_snippet, language):
     )
     return generate_text_with_api(prompt)
 
-# ===================== NOUVELLE FONCTION : SIMULATION D'EXÉCUTION =====================
-def simulate_execution(code_snippet, language):
-    """Demande à l'API de simuler l'exécution du code."""
-    prompt = (
-        f"Simule l'exécution de ce code {language}. "
-        f"Si le code s'exécute correctement, renvoie uniquement sa sortie (ce qui serait affiché dans la console). "
-        f"Si le code contient une erreur d'exécution (exception), décris brièvement l'erreur et la ligne concernée.\n\n"
-        f"CODE:\n{code_snippet}"
-    )
-    return generate_text_with_api(prompt)
-
-
 # ===================== INTERFACE UTILISATEUR STREAMLIT =====================
 def main():
     st.set_page_config(page_title="Convertisseur de code IA", page_icon="💻", layout="wide")
@@ -96,8 +83,7 @@ def main():
 
     source_code = st.text_area("Collez votre code ici :", height=300, placeholder="Collez votre code ici...")
 
-    # Division des boutons en 5 colonnes pour ajouter 'Exécuter'
-    col_convert, col_explain, col_optimize, col_check, col_execute = st.columns(5)
+    col_convert, col_explain, col_optimize, col_check = st.columns(4)
 
     with col_convert:
         convert_button = st.button("🔄 Convertir")
@@ -106,12 +92,7 @@ def main():
     with col_optimize:
         optimize_button = st.button("⚙️ Optimiser")
     with col_check:
-        check_button = st.button("🪶 Vérifier syntaxe")
-    with col_execute:
-        # Nouveau bouton
-        execute_button = st.button("▶️ Exécuter (Simulation)")
-
-    # LOGIQUE EXISTANTE
+        check_button = st.button("🪶 Vérifier syntaxe et erreurs")
 
     if convert_button:
         if not source_code:
@@ -147,23 +128,9 @@ def main():
                 st.subheader("🪶 Résumé des erreurs et corrections :")
                 st.markdown(review)
 
-    # NOUVELLE LOGIQUE POUR L'EXÉCUTION SIMULÉE
-
-    if execute_button and source_code:
-        if not source_code.strip():
-             st.warning("Veuillez coller du code à exécuter.")
-        else:
-            with st.spinner(f"Simulation d'exécution pour le code {source_lang}..."):
-                execution_output = simulate_execution(source_code, source_lang)
-                if execution_output:
-                    st.subheader("▶️ Sortie de la Simulation :")
-                    # Utiliser un bloc de code pour afficher la sortie comme dans un terminal
-                    st.code(execution_output, language='text')
-
     st.markdown("---")
     st.caption("Cette plateforme est réalisée par Farah Ghazouani, Arij Ben Rabiaa et Mayssa Laribi")
 
 if __name__ == "__main__":
     main()
-
 
