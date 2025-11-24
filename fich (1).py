@@ -9,6 +9,7 @@ API_KEY = "AIzaSyCi4hp7QaEnaksgmuHBMGqY_hEjwn8UVSk"
 API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
 
 # ===================== FONCTION D'APPEL API =====================
+@st.cache_data(show_spinner=False, ttl=600) # Mise en cache des résultats pour 10 minutes (600s)
 def generate_text_with_api(prompt):
     """Envoie une requête à l'API Gemini et renvoie une réponse concise."""
     headers = {"Content-Type": "application/json"}
@@ -164,4 +165,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
